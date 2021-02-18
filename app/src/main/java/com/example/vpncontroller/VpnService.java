@@ -8,12 +8,6 @@ import android.util.Log;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
-
 
 public class VpnService {
         private static Class VpnProfileClz;
@@ -21,6 +15,8 @@ public class VpnService {
         private static Class keyStoreClz;
         private static Class iConManagerClz;
         private static Object iConManagerObj;
+
+        final private static String TAG = "VpnService";
 
         /**
          * 使用其他方法前先调用该方法
@@ -50,16 +46,29 @@ public class VpnService {
          * @param password 用户密码
          * @return 返回一个com.android.internal.net.VpnProfile的实例
          */
-        public static Object createVpnProfile(String name, String server, String username, String password) {
+        public static Object createVpnProfile(String name,
+                                              String server,
+                                              String username,
+                                              String password,
+                                              int type,
+                                              boolean mppe,
+                                              String ipsecSecret) {
             Object VpnProfileObj = null;
             try {
                 //获得构造函数
                 Constructor constructor = VpnProfileClz.getConstructor(String.class);
                 VpnProfileObj = constructor.newInstance(name);
                 //设置参数
-                setParams(VpnProfileObj,name,server,username,password);
+                setParams(VpnProfileObj,
+                        name,
+                        server,
+                        username,
+                        password,
+                        type,
+                        mppe,
+                        ipsecSecret);
                 //插入Vpn数据
-                insertVpn(VpnProfileObj, name);
+                //insertVpn(VpnProfileObj, name);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -67,25 +76,55 @@ public class VpnService {
         }
 
         /**
-         * @param name     Vpn连接名，自定义
-         * @param server   服务器地址
-         * @param username 用户名
-         * @param password 用户密码
+         * @param name      Vpn连接名，自定义
+         * @param server    服务器地址
+         * @param username  用户名
+         * @param password  用户密码
+         * @param type      0-pptp 1-l2tp
+         * @param mppe      mpp加密
          * @return 返回一个com.android.internal.net.VpnProfile的实例
          */
-        public static Object setParams(Object VpnProfileObj,String name, String server, String username, String password) {
+        public static Object setParams(Object VpnProfileObj,
+                                       String name,
+                                       String server,
+                                       String username,
+                                       String password,
+                                       int type,
+                                       boolean mppe,
+                                       String ipsecSecret) {
             try {
-                Field field_username = VpnProfileClz.getDeclaredField("username");
-                Field field_password = VpnProfileClz.getDeclaredField("password");
-                Field field_server = VpnProfileClz.getDeclaredField("server");
-                Field field_name = VpnProfileClz.getDeclaredField("name");
-                //设置参数
-                field_name.set(VpnProfileObj, name);
-                field_server.set(VpnProfileObj, server);
-                field_username.set(VpnProfileObj, username);
-                field_password.set(VpnProfileObj, password);
+                if(0 == type) { // pptp
+                    Field field_username = VpnProfileClz.getDeclaredField("username");
+                    Field field_password = VpnProfileClz.getDeclaredField("password");
+                    Field field_server = VpnProfileClz.getDeclaredField("server");
+                    Field field_name = VpnProfileClz.getDeclaredField("name");
+                    Field field_type = VpnProfileClz.getDeclaredField("type");
+                    Field field_mppe = VpnProfileClz.getDeclaredField("mppe");
+                    field_name.set(VpnProfileObj, name);
+                    field_server.set(VpnProfileObj, server);
+                    field_username.set(VpnProfileObj, username);
+                    field_password.set(VpnProfileObj, password);
+                    field_type.set(VpnProfileObj, type);
+                    field_mppe.set(VpnProfileObj, mppe);
+                } else if(1 == type) { // l2tp
+                    Field field_username = VpnProfileClz.getDeclaredField("username");
+                    Field field_password = VpnProfileClz.getDeclaredField("password");
+                    Field field_server = VpnProfileClz.getDeclaredField("server");
+                    Field field_name = VpnProfileClz.getDeclaredField("name");
+                    Field field_type = VpnProfileClz.getDeclaredField("type");
+                    Field field_ipsecSecret = VpnProfileClz.getDeclaredField("ipsecSecret");
+                    field_name.set(VpnProfileObj, name);
+                    field_server.set(VpnProfileObj, server);
+                    field_username.set(VpnProfileObj, username);
+                    field_password.set(VpnProfileObj, password);
+                    field_type.set(VpnProfileObj, type);
+                    field_ipsecSecret.set(VpnProfileObj, ipsecSecret);
+                } else {
+                    return null;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
             return VpnProfileObj;
         }
@@ -108,6 +147,7 @@ public class VpnService {
             } catch (Exception e) {
                 isConnected = false;
                 e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
             return isConnected;
         }
@@ -126,6 +166,7 @@ public class VpnService {
             } catch (Exception e) {
                 disconnected = false;
                 e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
             return disconnected;
         }
@@ -153,6 +194,7 @@ public class VpnService {
                 return VpnProfileObj;
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.e(TAG, e.getMessage());
                 return null;
             }
         }

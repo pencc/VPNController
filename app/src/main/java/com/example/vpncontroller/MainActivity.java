@@ -9,6 +9,9 @@ import java.lang.reflect.InvocationTargetException;
 
 public class MainActivity extends AppCompatActivity {
 
+    // 0-pptp 1-l2tp
+    final private int type = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,11 +20,32 @@ public class MainActivity extends AppCompatActivity {
         try {
             VpnService.init(MainActivity.this);
             //查询检查是否已经存在Vpn
-            Object VpnProfile = VpnService.getVpnProfile("Vpn0");
-            if (VpnProfile == null) {
-                VpnProfile = VpnService.createVpnProfile("Vpn0", "192.168.191.1", "Vpntest", "123456");
+//            Object VpnProfile = VpnService.getVpnProfile("Vpn0");
+//            if (VpnProfile == null) {
+//                VpnProfile = VpnService.createVpnProfile("Vpn0", "192.168.191.1", "Vpntest", "123456");
+//            } else {
+//                VpnService.setParams(VpnProfile, "Vpn0", "192.168.191.1", "Vpntest", "123456");
+//            }
+
+            Object VpnProfile;
+            if(0 == type) {
+                VpnProfile = VpnService.createVpnProfile(
+                        "Vpn0",
+                        "sxya1.xfip.vip",
+                        "pyx123",
+                        "123",
+                        type,
+                        false,
+                        "");
             } else {
-                VpnService.setParams(VpnProfile, "Vpn0", "192.168.191.1", "Vpntest", "123456");
+                VpnProfile = VpnService.createVpnProfile(
+                        "Vpn0",
+                        "jsnj4.xfip.vip",
+                        "pyx123",
+                        "123",
+                        type,
+                        false,
+                        "123");
             }
             //连接
             VpnService.connect(MainActivity.this, VpnProfile);
