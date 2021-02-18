@@ -152,6 +152,30 @@ public class VpnService {
             return isConnected;
         }
 
+    /**
+     * 连接Vpn
+     * @return true:连接成功，false:连接失败
+     */
+    public static boolean checkConnectting() {
+        boolean isConnected = true;
+        try {
+            Method metStartLegacyVpn = iConManagerClz.getDeclaredMethod("getLegacyVpnInfo", int.class);
+            metStartLegacyVpn.setAccessible(true);
+            //开启Vpn连接
+            Object result = metStartLegacyVpn.invoke(iConManagerObj, 0);
+            if(null == result) {
+                Log.i(TAG, "-------------connect is null");
+            } else {
+                Log.i(TAG, "-------------connect is not null");
+            }
+        } catch (Exception e) {
+            isConnected = false;
+            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
+        }
+        return isConnected;
+    }
+    
         /**
          * 断开Vpn连接
          * @param context

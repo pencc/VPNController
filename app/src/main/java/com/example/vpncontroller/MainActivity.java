@@ -43,8 +43,11 @@ public class MainActivity extends AppCompatActivity {
 //            //连接
 //            VpnService.connect(MainActivity.this, VpnProfile);
 
+            //检查是否连接
+            VpnService.checkConnectting();
+
             //断开连接
-            VpnService.disconnect(MainActivity.this);
+            //VpnService.disconnect(MainActivity.this);
         } catch (Exception e) {
             e.printStackTrace();
         }
