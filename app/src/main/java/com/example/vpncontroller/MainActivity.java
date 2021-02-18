@@ -19,14 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             VpnService.init(MainActivity.this);
-            //查询检查是否已经存在Vpn
-//            Object VpnProfile = VpnService.getVpnProfile("Vpn0");
-//            if (VpnProfile == null) {
-//                VpnProfile = VpnService.createVpnProfile("Vpn0", "192.168.191.1", "Vpntest", "123456");
-//            } else {
-//                VpnService.setParams(VpnProfile, "Vpn0", "192.168.191.1", "Vpntest", "123456");
-//            }
-
+//            //查询检查是否已经存在Vpn
 //            Object VpnProfile;
 //            if(0 == type) {
 //                VpnProfile = VpnService.createVpnProfile(

@@ -162,7 +162,7 @@ public class VpnService {
             try {
                 Method metPrepare = iConManagerClz.getDeclaredMethod("prepareVpn", String.class, String.class, int.class);
                 //断开连接
-                metPrepare.invoke(iConManagerObj, null, "[Legacy Vpn]", 1000);
+                metPrepare.invoke(iConManagerObj, null, "[Legacy Vpn]", 0);
             } catch (Exception e) {
                 disconnected = false;
                 e.printStackTrace();
