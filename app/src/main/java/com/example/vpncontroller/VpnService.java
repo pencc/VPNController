@@ -160,9 +160,9 @@ public class VpnService {
         public static boolean disconnect(Context context) {
             boolean disconnected = true;
             try {
-                Method metPrepare = iConManagerClz.getDeclaredMethod("prepareVpn", String.class, String.class);
+                Method metPrepare = iConManagerClz.getDeclaredMethod("prepareVpn", String.class, String.class, int.class);
                 //断开连接
-                metPrepare.invoke(iConManagerObj, "[Legacy Vpn]", "[Legacy Vpn]");
+                metPrepare.invoke(iConManagerObj, null, "[Legacy Vpn]", 1000);
             } catch (Exception e) {
                 disconnected = false;
                 e.printStackTrace();

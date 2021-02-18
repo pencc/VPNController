@@ -27,31 +27,31 @@ public class MainActivity extends AppCompatActivity {
 //                VpnService.setParams(VpnProfile, "Vpn0", "192.168.191.1", "Vpntest", "123456");
 //            }
 
-            Object VpnProfile;
-            if(0 == type) {
-                VpnProfile = VpnService.createVpnProfile(
-                        "Vpn0",
-                        "sxya1.xfip.vip",
-                        "pyx123",
-                        "123",
-                        type,
-                        false,
-                        "");
-            } else {
-                VpnProfile = VpnService.createVpnProfile(
-                        "Vpn0",
-                        "jsnj4.xfip.vip",
-                        "pyx123",
-                        "123",
-                        type,
-                        false,
-                        "123");
-            }
-            //连接
-            VpnService.connect(MainActivity.this, VpnProfile);
+//            Object VpnProfile;
+//            if(0 == type) {
+//                VpnProfile = VpnService.createVpnProfile(
+//                        "Vpn0",
+//                        "sxya1.xfip.vip",
+//                        "pyx123",
+//                        "123",
+//                        type,
+//                        false,
+//                        "");
+//            } else {
+//                VpnProfile = VpnService.createVpnProfile(
+//                        "Vpn0",
+//                        "jsnj4.xfip.vip",
+//                        "pyx123",
+//                        "123",
+//                        type,
+//                        false,
+//                        "123");
+//            }
+//            //连接
+//            VpnService.connect(MainActivity.this, VpnProfile);
 
             //断开连接
-            //VpnService.disconnect(MainActivity.this);
+            VpnService.disconnect(MainActivity.this);
         } catch (Exception e) {
             e.printStackTrace();
         }
