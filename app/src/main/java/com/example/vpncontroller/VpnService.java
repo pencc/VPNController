@@ -154,26 +154,32 @@ public class VpnService {
 
     /**
      * 连接Vpn
-     * @return true:连接成功，false:连接失败
+     * @return
+     *     DISCONNECTED = 0;
+     *     INITIALIZING = 1;
+     *     CONNECTING = 2;
+     *     CONNECTED = 3;
+     *     TIMEOUT = 4;
+     *     FAILED = 5;
+     *     NoConnection = 6;
      */
-    public static boolean checkConnectting() {
-        boolean isConnected = true;
+    public static int checkConnectting() {
+        int status = 6;
         try {
             Method metStartLegacyVpn = iConManagerClz.getDeclaredMethod("getLegacyVpnInfo", int.class);
             metStartLegacyVpn.setAccessible(true);
             //开启Vpn连接
             Object result = metStartLegacyVpn.invoke(iConManagerObj, 0);
-            if(null == result) {
-                Log.i(TAG, "-------------connect is null");
-            } else {
-                Log.i(TAG, "-------------connect is not null");
+            if(null != result) {
+                Class lvInfo = Class.forName("com.android.internal.net.LegacyVpnInfo");
+                Field state = lvInfo.getField("state");
+                status = state.getInt(result);
             }
         } catch (Exception e) {
-            isConnected = false;
             e.printStackTrace();
             Log.e(TAG, e.getMessage());
         }
-        return isConnected;
+        return status;
     }
     
         /**
